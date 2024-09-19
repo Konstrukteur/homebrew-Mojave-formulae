@@ -19,7 +19,7 @@ class OpensslAT3 < Formula
 
   keg_only :shadowed_by_macos, "macOS provides LibreSSL"
 
-  depends_on "konstrukteur/mojave-formulae/ca-certificates"
+  depends_on "ca-certificates"
 
   on_linux do
     keg_only "it conflicts with the `openssl@1.1` formula"
