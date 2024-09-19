@@ -1,53 +1,44 @@
 class OpensslAT3 < Formula
   desc "Cryptography and SSL/TLS Toolkit"
-  homepage "https://openssl-library.org"
-  url "https://github.com/openssl/openssl/releases/download/openssl-3.3.2/openssl-3.3.2.tar.gz"
-  mirror "http://fresh-center.net/linux/misc/openssl-3.3.2.tar.gz"
-  sha256 "2e8a40b01979afe8be0bbfb3de5dc1c6709fedb46d6c89c10da114ab5fc3d281"
+  homepage "https://openssl.org/"
+  url "https://www.openssl.org/source/openssl-3.0.7.tar.gz"
+  mirror "https://www.mirrorservice.org/sites/ftp.openssl.org/source/openssl-3.0.7.tar.gz"
+  sha256 "83049d042a260e696f62406ac5c08bf706fd84383f945cf21bd61e9ed95c396e"
   license "Apache-2.0"
 
   livecheck do
-    url "https://openssl-library.org/source/"
-    regex(/href=.*?openssl[._-]v?(3(?:\.\d+)+)\.t/i)
+    url "https://www.openssl.org/source/"
+    regex(/href=.*?openssl[._-]v?(\d+(?:\.\d+)+)\.t/i)
   end
 
-  # bottle do
-  #   sha256 arm64_sequoia:  "13cc290ab3a88f06dd43a9fe09c6f00befd30f953e945d9656966d1975b54bd7"
-  #   sha256 arm64_sonoma:   "df4760f0256178172f6193d8bb6c4cbeffd78ac646926ad345c5170331c5d55c"
-  #   sha256 arm64_ventura:  "fbfe31302a2c0fdf0a6691a3106b93d51a89d41d6534e8ce1853cd3b8d94981d"
-  #   sha256 arm64_monterey: "4c602286ae85c4395575637afebcada6e9cc13a9a7663389af16b2aca978a041"
-  #   sha256 sonoma:         "39bc60aa67712dcf946d0465c7f9d838deb5623834dd5229c9ce9621214cc21e"
-  #   sha256 ventura:        "bfacdc5431d2c774ab7e8ed770c32c8da81f7b3524f28a35ddb829fc1806493f"
-  #   sha256 monterey:       "1a08c37e9c8b8458e791f27983f493482996437bbc55db3a5af10964498d2069"
-  #   sha256 x86_64_linux:   "1c54baa903d258fba6b5aef6818c5f282681d371933aaf8ccc71f34f3ac0f673"
-  # end
+  bottle do
+    root_url "https://github.com/gromgit/homebrew-core-mojave/releases/download/openssl@3"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, mojave: "f2e8593a084675a372045f9145b84fddfd804834a748de7309f2dc92861a862d"
+  end
 
-  depends_on "ca-certificates"
+  keg_only :shadowed_by_macos, "macOS provides LibreSSL"
 
-  # on_linux do
-  #   resource "Test::Harness" do
-  #     url "https://cpan.metacpan.org/authors/id/L/LE/LEONT/Test-Harness-3.50.tar.gz"
-  #     mirror "http://cpan.metacpan.org/authors/id/L/LE/LEONT/Test-Harness-3.50.tar.gz"
-  #     sha256 "79b6acdc444f1924cd4c2e9ed868bdc6e09580021aca8ff078ede2ffef8a6f54"
-  #   end
+  depends_on "konstrukteur/mojave-formulae/ca-certificates"
 
-  #   resource "Test::More" do
-  #     url "https://cpan.metacpan.org/authors/id/E/EX/EXODIST/Test-Simple-1.302201.tar.gz"
-  #     mirror "http://cpan.metacpan.org/authors/id/E/EX/EXODIST/Test-Simple-1.302201.tar.gz"
-  #     sha256 "956185dc96c1f2942f310a549a2b206cc5dd1487558f4e36d87af7a8aacbc87c"
-  #   end
+  on_linux do
+    keg_only "it conflicts with the `openssl@1.1` formula"
 
-  #   resource "ExtUtils::MakeMaker" do
-  #     url "https://cpan.metacpan.org/authors/id/B/BI/BINGOS/ExtUtils-MakeMaker-7.70.tar.gz"
-  #     mirror "http://cpan.metacpan.org/authors/id/B/BI/BINGOS/ExtUtils-MakeMaker-7.70.tar.gz"
-  #     sha256 "f108bd46420d2f00d242825f865b0f68851084924924f92261d684c49e3e7a74"
-  #   end
-  # end
+    resource "Test::Harness" do
+      url "https://cpan.metacpan.org/authors/id/L/LE/LEONT/Test-Harness-3.42.tar.gz"
+      sha256 "0fd90d4efea82d6e262e6933759e85d27cbcfa4091b14bf4042ae20bab528e53"
+    end
 
-  link_overwrite "bin/c_rehash", "bin/openssl", "include/openssl/*"
-  link_overwrite "lib/libcrypto*", "lib/libssl*"
-  link_overwrite "lib/pkgconfig/libcrypto.pc", "lib/pkgconfig/libssl.pc", "lib/pkgconfig/openssl.pc"
-  link_overwrite "share/doc/openssl/*", "share/man/man*/*ssl"
+    resource "Test::More" do
+      url "https://cpan.metacpan.org/authors/id/E/EX/EXODIST/Test-Simple-1.302186.tar.gz"
+      sha256 "2895c8da7c3fe632e5714c7cc548705202cdbf3afcbc0e929bc5e6a5172265d4"
+    end
+
+    resource "ExtUtils::MakeMaker" do
+      url "https://cpan.metacpan.org/authors/id/B/BI/BINGOS/ExtUtils-MakeMaker-7.62.tar.gz"
+      sha256 "5022ad857fd76bd3f6b16af099fe2324639d9932e08f21e891fb313d9cae1705"
+    end
+  end
 
   # SSLv2 died with 1.1.0, so no-ssl2 no longer required.
   # SSLv3 & zlib are off by default with 1.1.0 but this may not
@@ -57,7 +48,7 @@ class OpensslAT3 < Formula
     args = %W[
       --prefix=#{prefix}
       --openssldir=#{openssldir}
-      --libdir=lib
+      --libdir=#{lib}
       no-ssl3
       no-ssl3-method
       no-zlib
@@ -72,12 +63,11 @@ class OpensslAT3 < Formula
 
   def install
     if OS.linux?
-      ENV.prepend_create_path "PERL5LIB", buildpath/"lib/perl5"
-      ENV.prepend_path "PATH", buildpath/"bin"
+      ENV.prepend_create_path "PERL5LIB", libexec/"lib/perl5"
 
       %w[ExtUtils::MakeMaker Test::Harness Test::More].each do |r|
         resource(r).stage do
-          system "perl", "Makefile.PL", "INSTALL_BASE=#{buildpath}"
+          system "perl", "Makefile.PL", "INSTALL_BASE=#{libexec}"
           system "make", "PERL5LIB=#{ENV["PERL5LIB"]}", "CC=#{ENV.cc}"
           system "make", "install"
         end
@@ -105,12 +95,7 @@ class OpensslAT3 < Formula
     system "perl", "./Configure", *(configure_args + arch_args)
     system "make"
     system "make", "install", "MANDIR=#{man}", "MANSUFFIX=ssl"
-    # AF_ALG support isn't always enabled (e.g. some containers), which breaks the tests.
-    # AF_ALG is a kernel feature and failures are unlikely to be issues with the formula.
-    system "make", "test", "TESTS=-test_afalg"
-
-    # Prevent `brew` from pruning the `certs` and `private` directories.
-    touch %w[certs private].map { |subdir| openssldir/subdir/".keepme" }
+    system "make", "test"
   end
 
   def openssldir
@@ -118,7 +103,7 @@ class OpensslAT3 < Formula
   end
 
   def post_install
-    rm(openssldir/"cert.pem") if (openssldir/"cert.pem").exist?
+    rm_f openssldir/"cert.pem"
     openssldir.install_symlink Formula["ca-certificates"].pkgetc/"cert.pem"
   end
 

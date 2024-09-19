@@ -1,8 +1,8 @@
 class CaCertificates < Formula
   desc "Mozilla CA certificate store"
   homepage "https://curl.se/docs/caextract.html"
-  url "https://curl.se/ca/cacert-2024-07-02.pem"
-  sha256 "1bf458412568e134a4514f5e170a328d11091e071c7110955c9884ed87972ac9"
+  url "https://curl.se/ca/cacert-2023-01-10.pem"
+  sha256 "fb1ecd641d0a02c01bc9036d513cb658bbda62a75e246bedbc01764560a639f0"
   license "MPL-2.0"
 
   livecheck do
@@ -11,8 +11,7 @@ class CaCertificates < Formula
   end
 
   bottle do
-    rebuild 1
-    sha256 cellar: :any_skip_relocation, all: "efae38787c286c7a249f9e7158e3159107a361df5e68fc2a531ccb8177b01cbe"
+    sha256 cellar: :any_skip_relocation, all: "11fe9d0a98a2ac454fa1db95762a697c3340f46560ff27e5e9db8fdeb003f17e"
   end
 
   def install
@@ -122,7 +121,7 @@ class CaCertificates < Formula
   end
 
   def linux_post_install
-    rm(pkgetc/"cert.pem") if (pkgetc/"cert.pem").exist?
+    rm_f pkgetc/"cert.pem"
     pkgetc.mkpath
     cp pkgshare/"cacert.pem", pkgetc/"cert.pem"
   end
